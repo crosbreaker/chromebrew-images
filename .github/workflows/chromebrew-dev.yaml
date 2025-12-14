@@ -1,14 +1,7 @@
-on: workflow_dispatch
-name: build
-
 jobs:
   build:
     permissions:
       contents: write
-    
-    strategy: 
-      matrix:
-        board: [nissa, dedede, corsola, asurada, atlas, cherry, drallion, geralt, nocturne, rammus, rex, sarien, skyrim, staryu]
 
     runs-on: ubuntu-latest
     steps:
