@@ -1,0 +1,39 @@
+on: workflow_dispatch
+name: build
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    
+    strategy: 
+      matrix:
+        board: [nissa, dedede, corsola, asurada, atlas, cherry, drallion, geralt, nocturne, rammus, rex, sarien, skyrim, staryu]
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 32768
+          swap-size-mb: 64
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
+
+      - name: download repo
+        uses: actions/checkout@v4
+      
+      - name: run build
+        run: |
+          set -x
+          curl -SLOk "https://web.archive.org/web/20230428160204if_/https://dl.sh1mmer.me/build-tools/chromebrew/chromebrew-dev.tar.gz"
+          
+      - name: create release
+        uses: ading2210/gh-large-releases@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: chromebrew-dev.tar.gz
+          make_latest: true
